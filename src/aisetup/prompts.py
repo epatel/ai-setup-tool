@@ -7,6 +7,10 @@ changed the instructions agents read.
 
 from __future__ import annotations
 
+import re
+
+from .errors import AstError
+
 PROMPT_DIR = "prompts/"  # a source repo offers `prompts/<name>.md` as `ast prompt <name>`
 
 _SETUP = """\
@@ -36,10 +40,11 @@ make a commit.
    `ast add <tool>` or `ast disable <tool>` only for what the user approves.
 6. If cards were installed, check that `CLAUDE.md` contains `@CARDS.md`, and read
    `CARDS.md` so that you know when to open each card.
-7. Run `ast status` again. It must exit 0 and list every tool as `ok`.
-8. Report to the user: the set, the tools installed, anything blocked or skipped, and the
-   files to commit (`ast.toml`, `ast.lock`, `.claude/`, `cards/`, `CARDS.md`, `CLAUDE.md`).
-   Ask if you must make the commit.
+7. If this prompt has a section **Steps from the org repo** at the end, do that section now.
+8. Run `ast status` again. It must exit 0 and list every tool as `ok`.
+9. Report to the user: the set, the tools installed, anything blocked or skipped, and the
+   files to commit (`ast.toml`, `ast.lock`, `.claude/`, `cards/`, `CARDS.md`, `CLAUDE.md`,
+   and what the org steps made). Ask if you must make the commit.
 """
 
 _ORG_GIVEN = "Run `ast use {repo}`. This imports the organisation's sources and sets."
@@ -145,20 +150,23 @@ _PROJECTS_UNKNOWN = """Ask the user which projects will use the repo, and what
    kind, and the agent tools that it has now (`.claude/`, `cards/`, `ast.toml`)."""
 
 
-def setup(args: list[str]) -> str:
+def setup(args: list[str], org_steps: str | None = None) -> str:
     step = _ORG_GIVEN.format(repo=args[0]) if args else _ORG_UNKNOWN
-    return _SETUP.format(org_step=step)
+    text = _SETUP.format(org_step=step)
+    if org_steps:
+        text += f"\n---\n\n## Steps from the org repo\n\n{org_steps.strip()}\n"
+    return text
 
 
-def update(args: list[str]) -> str:
+def update(args: list[str], org_steps: str | None = None) -> str:
     return _UPDATE
 
 
-def adopt(args: list[str]) -> str:
+def adopt(args: list[str], org_steps: str | None = None) -> str:
     return _ADOPT
 
 
-def org(args: list[str]) -> str:
+def org(args: list[str], org_steps: str | None = None) -> str:
     step = _PROJECTS_GIVEN.format(projects=", ".join(args)) if args else _PROJECTS_UNKNOWN
     return _ORG.format(projects_step=step)
 
@@ -178,6 +186,22 @@ def title(text: str, fallback: str) -> str:
         if line.strip():
             return line.strip().lstrip("# ").strip() or fallback
     return fallback
+
+
+_INCLUDE = re.compile(r"^\{\{include ([^}\n]+)\}\}[ \t]*$", re.MULTILINE)
+
+
+def expand(text: str, read, where: str) -> str:
+    """Replace each `{{include path}}` line with that file from the same repo (one level)."""
+
+    def include(match: re.Match) -> str:
+        path = match.group(1).strip()
+        body = read(path)
+        if body is None:
+            raise AstError(f"{where}: included file '{path}' not found")
+        return body.rstrip("\n")
+
+    return _INCLUDE.sub(include, text)
 
 
 def fill(text: str, args: list[str]) -> str:

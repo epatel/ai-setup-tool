@@ -56,7 +56,11 @@ nothing is installed. `cli.org_catalog` lists the tools of the org's sources; fo
 (`setup`, `adopt`, `update`, `org`) as templates with no logic beyond inserting their arguments. Any source,
 including the org repo, can offer more as `prompts/<name>.md`; `cli.source_prompts` reads
 them from the locked commit (or from the working tree in an org repo). They are never
-installed. A built-in name wins over a source prompt of the same name. The command works
+installed. A `{{include path}}` line is replaced by that file from the same repo
+(`prompts.expand`, one level). A built-in name wins over a source prompt of the same name,
+with one exception in spirit: `ast prompt setup` appends the org repo's `prompts/setup.md`
+as extra steps. With a repo argument it reads that repo's default branch directly, so it
+works before the project uses the org repo; with none it uses the org repo in use. The command works
 outside a project, where only the built-ins exist.
 
 ## Git access

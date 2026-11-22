@@ -106,3 +106,16 @@ def test_list_tree_shows_set_inheritance(ast, project, org):
     assert ast(project, "list", "--tree")[0] == 2  # no org in use yet
     ast(project, "use", "../org", "--set", "proj-fenix")
     assert "proj-fenix  (3 tools)  Fenix  <- selected" in ast(project, "list", "--tree")[1]
+
+
+def test_setup_prompt_carries_the_org_repos_own_steps(ast, project, org, tmp_path):
+    commit(org, {"prompts/setup.md": "Apply our patterns.\n\n{{include cards/rules.md}}\n", "cards/rules.md": "Rule one.\n"})
+    code, out, _ = ast(tmp_path, "prompt", "setup", str(org))  # before the project uses the org repo
+    assert code == 0 and out.index("## Steps from the org repo") < out.index("Apply our patterns.")
+    assert "Rule one." in out and "do that section now" in out
+
+    ast(project, "use", "../org", "--set", "default")
+    ast(project, "update")
+    out = ast(project, "prompt", "setup")[1]  # no repo named: the org repo in use
+    assert "Apply our patterns." in out and "Rule one." in out
+    assert "setup" not in [line.split()[0] for line in ast(project, "prompt")[1].splitlines()[3:]]

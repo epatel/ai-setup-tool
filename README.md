@@ -108,6 +108,14 @@ An org repo or a source can add its own prompts: a file `prompts/<name>.md` is p
 `ast prompt <name>`, with `$ARGUMENTS` replaced by the extra words on the command line.
 Prompts are read from the source at its locked commit; they are not installed as files.
 
+Two more things an org prompt can do:
+
+- A line `{{include cards/some-file.md}}` is replaced by that file from the same repo, so
+  a prompt can carry a longer text without holding a second copy of it.
+- `prompts/setup.md` is special. `ast prompt setup <org repo>` prints the built-in steps
+  and then that file as "Steps from the org repo", so an org can add its own work to a
+  setup, such as documentation patterns to offer.
+
 ## Commands
 
 | Command | Does |

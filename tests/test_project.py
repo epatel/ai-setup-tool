@@ -178,8 +178,9 @@ def test_cards_get_an_index_that_claude_md_imports(ast, project, source):
 
 
 def test_prompt_prints_instructions_for_an_agent(ast, project, source, tmp_path):
-    code, out, _ = ast(tmp_path, "prompt", "setup", "acme/setup")  # works outside a project
+    code, out, err = ast(tmp_path, "--offline", "prompt", "setup", "acme/setup")  # works outside a project
     assert code == 0 and "Run `ast use acme/setup`." in out and "ast select <set>" in out
+    assert "could not read acme/setup" in err and "## Steps from the org repo" not in out
     assert "ask the user for the organisation's setup repo" in ast(tmp_path, "ai", "setup")[1]
     assert "ast update" in ast(project, "prompt", "update")[1]
     assert "adopted" in ast(tmp_path, "prompt", "adopt")[1]
@@ -190,6 +191,7 @@ def test_prompt_prints_instructions_for_an_agent(ast, project, source, tmp_path)
     ast(project, "source", "add", "../tools")
     _, out, _ = ast(project, "prompt")
     assert "setup" in out and "built in" in out and "from tools" in out and "Tidy the repo" in out
-    assert "Tidy the docs folder now." in ast(project, "prompt", "tidy", "the", "docs", "folder")[1]
+    out = ast(project, "prompt", "tidy", "the", "docs", "folder")[1]
+    assert "Tidy the docs folder now." in out and "How we name things." in out and "{{include" not in out
     code, _, err = ast(project, "prompt", "nope")
     assert code == 2 and "unknown prompt 'nope'" in err and "tidy" in err

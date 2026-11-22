@@ -21,7 +21,7 @@ from .config import (
 from .engine import LOCK_FILE, Lock, apply, build_plan, installed_state, pending
 from .errors import AstError
 from .gitrepo import Repo, default_name, is_local, normalize_repo
-from .prompts import BUILTIN, PROMPT_DIR, fill, title
+from .prompts import BUILTIN, PROMPT_DIR, expand, fill, title
 
 # ---------------------------------------------------------------- shared helpers
 
@@ -523,34 +523,59 @@ def cmd_set(args) -> int:
 
 
 def source_prompts(args) -> dict:
-    """Prompts that the org repo and the sources offer: name -> (origin, function that reads it)."""
+    """Prompts that the org repo and the sources offer: name -> (origin, function that returns the text)."""
     try:
         mode, root = find_root(args)
     except AstError:
         return {}  # not in a project: only the built-in prompts
     found: dict = {}
+
+    def offer(name: str, origin: str, file: str, read) -> None:
+        found.setdefault(name, (origin, lambda: expand(read(file), read, f"{origin}:{file}")))
+
     if mode == "org":
+
+        def read_local(path: str) -> str | None:
+            return (root / path).read_text() if (root / path).is_file() else None
+
         for path in sorted((root / PROMPT_DIR).glob("*.md")):
-            found[path.stem] = ("this repo", path.read_text)
+            offer(path.stem, "this repo", PROMPT_DIR + path.name, read_local)
         return found
     plan = build_plan(ProjectConfig.load(root), Lock(root / LOCK_FILE), offline=args.offline, strict=False)
     for src in plan.sources.values():
         for file in src.repo.files(src.commit):
             name = file[len(PROMPT_DIR) : -3]
             if file.startswith(PROMPT_DIR) and file.endswith(".md") and name and "/" not in name:
-                found.setdefault(name, (src.name, lambda s=src, f=file: s.repo.read(s.commit, f)))
+                offer(name, src.name, file, lambda path, s=src: s.repo.read(s.commit, path))
     return found
 
 
+def org_setup_steps(args, offered: dict) -> str | None:
+    """The org repo's own steps for `ast prompt setup`: its prompts/setup.md, if it has one."""
+    if not args.args:  # no repo named: use the org repo this project already uses
+        return offered["setup"][1]() if "setup" in offered else None
+    spec = args.args[0]
+    try:
+        repo = Repo(normalize_repo(spec, Path(args.directory or ".").resolve()), args.offline)
+        commit, _ = repo.resolve(None)
+        text = repo.read(commit, PROMPT_DIR + "setup.md")
+        return expand(text, lambda path: repo.read(commit, path), spec) if text else None
+    except AstError as e:
+        print(f"ast: could not read {spec} for its own setup steps: {e}", file=sys.stderr)
+        return None
+
+
 def cmd_prompt(args) -> int:
-    extra = {n: p for n, p in source_prompts(args).items() if n not in BUILTIN}
+    offered = source_prompts(args)
+    extra = {n: p for n, p in offered.items() if n not in BUILTIN}
     if not args.name:
         print("Prompts for a coding agent. Print one with `ast prompt <name>` and tell the agent to follow it.")
         rows = [[name, "built in", description] for name, (description, _) in BUILTIN.items()]
-        rows += [[name, f"from {origin}", title(read(), name)] for name, (origin, read) in extra.items()]
+        rows += [[name, f"from {origin}", title(load(), name)] for name, (origin, load) in extra.items()]
         table(rows)
     elif args.name in BUILTIN:
-        print(BUILTIN[args.name][1](args.args), end="")
+        org_steps = org_setup_steps(args, offered) if args.name == "setup" else None
+        print(BUILTIN[args.name][1](args.args, org_steps), end="")
     elif args.name in extra:
         print(fill(extra[args.name][1](), args.args).rstrip("\n"))
     else:
