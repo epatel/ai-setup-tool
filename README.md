@@ -62,6 +62,7 @@ ast set new proj-fenix --extends default --description "Fenix team"
 ast add state-machines --set proj-fenix          # extra tool
 ast disable double-check --set proj-fenix        # exclude an inherited tool
 ast list                                         # every set, resolved
+ast list --tree                                  # how the sets build on each other
 ast status                                       # checks that every tool still exists
 ```
 
@@ -96,6 +97,7 @@ exclude = ["agent-skills:skill/double-check"]
 | `ast use <org repo> [--ref R] [--set S]` / `--remove` | Import an org repo's sets, or stop using it. |
 | `ast select [set]` | Select a set; with no name, list the sets. |
 | `ast list [-a]` | Active tools and their state; `-a` adds what else is available. |
+| `ast list --tree` | The org's sets as an inheritance tree: what each set adds (`+`) and excludes (`-`). Works in an org repo and in a project that uses one. |
 | `ast add <tool>...` | Add tools to the project (or to a set: `--set S`). |
 | `ast rm <tool>...` | Remove tools you added (or from a set: `--set S`). |
 | `ast disable <tool>...` / `ast enable <tool>...` | Turn a tool off or on, keeping it in the config. In an org repo: a set's `exclude` list. |
@@ -121,8 +123,16 @@ while they are unambiguous. Global flags: `-C DIR`, `--offline`, `--org` (act on
 | script | `scripts/<file>` | `.claude/scripts/<file>` |
 | card | `cards/<name>.md` | `cards/<name>.md` |
 
-A card is a context card: a short reference file that `CLAUDE.md` links to. `ast` copies the
-file; you add the index line to `CLAUDE.md` yourself.
+A card is a context card: a short reference file that an agent reads only when the work
+calls for it. The agent decides from an index line, so `ast` keeps that index for you:
+
+- Installed cards are listed in `CARDS.md`, between two `ast:cards` marker comments. Text
+  outside the markers is yours and is kept.
+- `CLAUDE.md` (or `AGENTS.md`) gets one `@CARDS.md` line the first time a card is installed,
+  so the index loads in every session. `ast` creates `CLAUDE.md` if the project has neither.
+- The text after the dash comes from the source repo: a line
+  `- [name](cards/name.md) — when to read it` in its `CARDS.md`, `CLAUDE.md` or `AGENTS.md`.
+  Without such a line, `ast` uses the card's first paragraph.
 
 ## Safety rules
 
@@ -131,6 +141,8 @@ file; you add the index line to `CLAUDE.md` yourself.
   install, unless you pass `--force`. Such tools are reported as `blocked` and the command
   exits 1.
 - A command that fails leaves `ast.toml` and `ast.lock` as they were.
+- Outside the tools it installs, `ast` changes two files: its own marked block in `CARDS.md`,
+  and one `@CARDS.md` line appended to `CLAUDE.md` (or `AGENTS.md`) when cards are installed.
 - Repos are cached as bare clones in `~/.cache/ast` (`AST_CACHE_DIR` or `XDG_CACHE_HOME`
   to move it).
 

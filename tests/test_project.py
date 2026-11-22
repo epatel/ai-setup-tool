@@ -148,3 +148,30 @@ def test_tool_removed_upstream_can_be_removed_from_project(ast, project, source)
     assert code == 2 and "not found in their source" in err
     assert ast(project, "rm", "beta")[0] == 0
     assert not (project / ".claude/skills/beta").exists()
+
+
+def test_cards_get_an_index_that_claude_md_imports(ast, project, source):
+    (project / "CLAUDE.md").write_text("# My project\n")
+    ast(project, "source", "add", "../tools")
+    code, out, _ = ast(project, "add", "defaults", "naming")
+    assert code == 0 and "indexed    CARDS.md" in out and "linked     CLAUDE.md" in out
+    index = (project / "CARDS.md").read_text()
+    # the trigger comes from the source's index, or else from the card's first paragraph
+    assert "- [defaults](cards/defaults.md) — choosing a default for a new service" in index
+    assert "- [naming](cards/naming.md) — How we name things." in index
+    assert (project / "CLAUDE.md").read_text() == "# My project\n\n## Cards\n\n@CARDS.md\n"
+    assert lock(project)["tools"]["tools:card/defaults"]["trigger"] == "choosing a default for a new service"
+
+    # text outside the markers is kept, and a second sync changes nothing
+    (project / "CARDS.md").write_text(index + "\n- [mine](cards/mine.md) — my own card\n")
+    assert "up to date" in ast(project, "sync")[1]
+    assert ast(project, "disable", "naming")[0] == 0
+    index = (project / "CARDS.md").read_text()
+    assert "naming" not in index and "defaults" in index and "[mine](cards/mine.md)" in index
+    assert (project / "CLAUDE.md").read_text().count("@CARDS.md") == 1
+
+    commit(source, {"CARDS.md": "- [defaults](cards/defaults.md) — a better trigger\n"})
+    ast(project, "update")
+    assert "— a better trigger" in (project / "CARDS.md").read_text()
+    ast(project, "rm", "defaults")
+    assert "defaults" not in (project / "CARDS.md").read_text()

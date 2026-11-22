@@ -11,10 +11,11 @@ flowchart LR
     engine --> catalog
     engine --> gitrepo[gitrepo.py<br>cached bare clones]
     cli --> gitrepo
+    engine --> cardindex[cardindex.py<br>CARDS.md block, CLAUDE.md import]
 ```
 
-Dependencies point one way: `cli` → `engine` → `config` / `catalog` / `gitrepo`. The three
-leaf modules do not import each other. `errors.AstError` is the only exception the CLI
+Dependencies point one way: `cli` → `engine` → `config` / `catalog` / `gitrepo`. The leaf
+modules (`config`, `catalog`, `gitrepo`, `cardindex`) do not import each other. `errors.AstError` is the only exception the CLI
 catches; raise it for anything the user can act on, and `main` prints it and exits 2.
 
 ## The two modes

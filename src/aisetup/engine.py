@@ -11,6 +11,7 @@ import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from .cardindex import SOURCE_INDEX_FILES, source_triggers, summary, write_index
 from .catalog import Tool, discover
 from .config import ORG_FILE, OrgConfig, ProjectConfig, migrate, resolve_set
 from .errors import AstError
@@ -268,6 +269,24 @@ def apply(plan: Plan, root: Path, lock: Lock, force: bool = False):
                 "tree": tree, "hash": content,
             }  # fmt: skip
             actions.append((verb, tool_id))
+
+    # Cards: record each one's index line (from the source's index, else the card's first
+    # paragraph), then rewrite the ast block in CARDS.md so agents can find the cards.
+    triggers: dict[str, dict[str, str]] = {}
+    cards = []
+    for tool_id, entry in tools.items():
+        if Tool.from_id(tool_id).kind != "card" or not (root / entry["dest"]).exists():
+            continue
+        tool = plan.tools.get(tool_id)
+        if tool and entry["tree"] == plan.trees[tool_id]:  # not a blocked, older copy
+            src = plan.sources[tool.source]
+            if src.name not in triggers:
+                texts = [src.repo.read(src.commit, name) for name in SOURCE_INDEX_FILES]
+                triggers[src.name] = source_triggers([t for t in texts if t])
+            entry["trigger"] = triggers[src.name].get(tool.name) or summary(root / entry["dest"])
+        name = Tool.from_id(tool_id).name
+        cards.append((name, entry["dest"], entry.get("trigger") or summary(root / entry["dest"])))
+    actions += write_index(root, cards)
 
     lock.org = plan.org
     lock.sources = {

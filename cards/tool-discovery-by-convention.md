@@ -15,8 +15,13 @@ installed (`catalog.DESTS`):
 | script | `scripts/<file>` | `.claude/scripts/<file>` |
 | card | `cards/<name>.md` | `cards/<name>.md` |
 
-Cards are the one kind installed outside `.claude/`. `ast` copies the card but does not
-add its index line to `CLAUDE.md`.
+Cards are the one kind installed outside `.claude/`, and the one kind that needs more than
+a copy: an agent opens a card only when an index line tells it to. `cardindex.write_index`
+keeps a marked block in the project's `CARDS.md` with one line per installed card, and adds
+`@CARDS.md` to `CLAUDE.md` (or `AGENTS.md`; it creates `CLAUDE.md` when neither exists).
+The trigger text is found by convention too: a `- [name](cards/name.md) — trigger` line in
+the source repo's `CARDS.md`, `CLAUDE.md` or `AGENTS.md`, else the card's first paragraph.
+It is stored as `trigger` in the lock entry.
 
 When the same kind and name appears in two places, the earlier place in the table wins.
 That matters for repos such as `epatel/agent-skills`, which keeps a skill at the root and

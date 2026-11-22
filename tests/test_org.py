@@ -92,3 +92,17 @@ def test_use_remove_uninstalls_set_tools(ast, project, org):
     assert ast(project, "use", "--remove")[0] == 0
     assert not (project / ".claude").exists()
     assert "[org]" not in (project / "ast.toml").read_text()
+
+
+def test_list_tree_shows_set_inheritance(ast, project, org):
+    code, out, _ = ast(org, "list", "--tree")
+    assert code == 0
+    lines = out.splitlines()
+    assert lines[0].startswith("default  (3 tools)")
+    assert "│   + tools:skill/alpha" in lines
+    assert any(line.startswith("└── proj-fenix  (3 tools)  Fenix") for line in lines)
+    assert "        + tools:agent/reviewer" in lines and "        - tools:skill/beta" in lines
+
+    assert ast(project, "list", "--tree")[0] == 2  # no org in use yet
+    ast(project, "use", "../org", "--set", "proj-fenix")
+    assert "proj-fenix  (3 tools)  Fenix  <- selected" in ast(project, "list", "--tree")[1]

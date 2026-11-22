@@ -65,6 +65,9 @@ def source(tmp_path) -> Path:
             "agents/reviewer.md": "reviewer\n",
             "commands/ship.md": "ship\n",
             "scripts/check.sh": "#!/bin/sh\n",
+            "cards/defaults.md": "# Defaults\n\n## Problem\n\nTeams pick different defaults.\n\nMore text.\n",
+            "cards/naming.md": "# Naming\n\nHow we name things.\n",
+            "CARDS.md": "# Cards\n\n- [defaults](cards/defaults.md) — choosing a default for a new service\n",
             "README.md": "not a tool\n",
         },
     )

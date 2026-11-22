@@ -221,6 +221,10 @@ def cmd_list(args) -> int:
         return list_org(OrgConfig.load(root), args)
     cfg, lock = ProjectConfig.load(root), Lock(root / LOCK_FILE)
     plan = build_plan(cfg, lock, offline=args.offline, strict=False)
+    if args.tree:
+        if not plan.org_config:
+            raise AstError("no org repo in use, so there are no sets to show (run `ast use <org repo>`)")
+        return set_tree(plan.org_config.sets, None, cfg.org.get("set"))
     rows = []
     for tool_id, origin in plan.origins.items():
         if tool_id in plan.tools:
@@ -244,8 +248,34 @@ def cmd_list(args) -> int:
     return 0
 
 
+def set_tree(sets: dict[str, dict], only: str | None, selected: str | None = None) -> int:
+    """Print sets as an inheritance tree: what each one adds (+) and excludes (-)."""
+    if only and only not in sets:
+        raise AstError(f"unknown set '{only}'; sets: {', '.join(sorted(sets)) or 'none'}")
+    children = {name: [c for c, s in sets.items() if name in s["extends"]] for name in sets}
+
+    def show(name: str, prefix: str, connector: str, inner: str) -> None:
+        note = "  <- selected" if name == selected else ""
+        description = f"  {sets[name]['description']}" if sets[name]["description"] else ""
+        print(f"{prefix}{connector}{name}  ({len(resolve_set(sets, name))} tools){description}{note}")
+        gutter = prefix + inner + ("│   " if children[name] else "    ")
+        for tool_id in sets[name]["tools"]:
+            print(f"{gutter}+ {tool_id}")
+        for tool_id in sets[name]["exclude"]:
+            print(f"{gutter}- {tool_id}")
+        for i, child in enumerate(children[name]):
+            last = i == len(children[name]) - 1
+            show(child, prefix + inner, "└── " if last else "├── ", "    " if last else "│   ")
+
+    for root in [only] if only else [n for n, s in sets.items() if not s["extends"]]:
+        show(root, "", "", "")
+    return 0
+
+
 def list_org(org: OrgConfig, args) -> int:
     sets = org.sets
+    if args.tree:
+        return set_tree(sets, args.set)
     catalog, _ = org_catalog(org, args.offline)
     used: set[str] = set()
     for name in [args.set] if args.set else sets:
@@ -547,6 +577,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = command("list", cmd_list, "list active tools", set_=True)
     p.add_argument("-a", "--available", action="store_true", help="also list tools not in use")
+    p.add_argument("-t", "--tree", action="store_true", help="show the org's sets as an inheritance tree")
 
     command("add", cmd_add, "add tools to the project (or to a set in an org repo)", tools=True, set_=True, force=True)
     command("rm", cmd_rm, "remove tools you added (or from a set in an org repo)", tools=True, set_=True, force=True)

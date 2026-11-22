@@ -32,6 +32,17 @@ editing a ref by hand takes effect on the next sync.
 A locked tool that is no longer wanted is removed, unless its files are modified: then the
 removal is **blocked** and the lock entry stays.
 
+## The card index
+
+After files are in place, `apply` rewrites the block between the `ast:cards` markers in
+`CARDS.md` from the locked cards, every run. Only that block is `ast`'s; the rest of the
+file is kept. When there are cards and neither `CLAUDE.md` nor `AGENTS.md` contains
+`@CARDS.md`, one import line is appended (once). With no cards left the block is emptied;
+the file and the import stay, so the import never dangles.
+
+A card's `trigger` is refreshed from the source whenever the installed copy matches the
+planned content, so a source can improve its index line without changing the card.
+
 ## Invariants
 
 - Nothing with local edits, and nothing `ast` did not install, is overwritten or deleted

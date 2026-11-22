@@ -46,5 +46,9 @@ every machine. Tests use `file://` URLs for this.
 A project never edits the org's sets. Org changes reach a project only on `ast update`,
 because the org commit is locked; `ast status` previews them as install/update/remove.
 
+`ast list --tree` (`cli.set_tree`) prints the sets by inheritance, with each set's own
+`tools` as `+` and `exclude` as `-`. A set with two parents appears under both. In a
+project it reads the sets from the locked org commit and marks the selected one.
+
 `ast use <repo>` keeps the selected set when the new repo still has it, and selects
 automatically when the repo has exactly one set.
