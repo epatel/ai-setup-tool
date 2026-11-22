@@ -1,6 +1,6 @@
 ---
 name: ste-writing
-description: Rewrite prose (docs, READMEs, PR descriptions, error messages, release notes, comments — never code) into ASD-STE100 Simplified Technical English to remove "AI slop". Use when asked to make writing not sound like AI, make docs clear or plain, enforce a controlled writing style, or write technical documentation that reads human. Two modes — strict (procedures/safety) and STE-flavored (general prose).
+description: Rewrite prose (docs, READMEs, PR descriptions, error messages, release notes, comments — never code) into ASD-STE100 Simplified Technical English to remove "AI slop". Use when asked to make writing not sound like AI, make docs clear or plain, or enforce a controlled writing style. Also use to write technical documentation that reads human. Two modes — strict (procedures/safety) and STE-flavored (general prose).
 ---
 
 # ste-writing
@@ -11,7 +11,7 @@ Write prose in ASD-STE100 Simplified Technical English. This applies to document
 
 WORDS
 - Use one name for one thing. Do not call the same item by two different names.
-- Use the short common word: start (not begin/commence/initiate), use (not utilize/leverage), help (not facilitate), make sure (not ensure), before (not prior to), after (not subsequent to), about (not regarding/concerning), get (not obtain/acquire), show (not demonstrate), also (not additionally/furthermore/moreover).
+- Use the short common word: start (not begin/commence/initiate), use (not utilize/leverage), help (not facilitate), make sure (not ensure). Write before (not prior to), after (not subsequent to), and about (not regarding/concerning). Write get (not obtain/acquire), show (not demonstrate), and also (not additionally/furthermore/moreover).
 - Give each word one meaning. "fall" means to move down, not to decrease.
 - No marketing adjectives: seamless, robust, powerful, cutting-edge, effortless, world-class, next-generation, revolutionary.
 - American spelling.
@@ -49,8 +49,8 @@ Write only the requested text. No preamble, no summary, no closing remarks.
 5. Any "-ing" main verb, nominalization ("perform an analysis"), or phrasal verb ("spin up")? Replace with a plain verb.
 6. Same thing named two ways? Pick one name.
 
-The mechanical rules above are lintable and are what removes slop. Full STE also needs human judgment (the right technical noun, whether a sentence "makes good sense") — a checker cannot certify that, and slop is not about that. This skill fixes the FORM of slop. It cannot make a hollow paragraph true.
+The mechanical rules above are lintable and are what removes slop. Full STE also needs human judgment (the right technical noun, whether a sentence "makes good sense"). A checker cannot certify that, and slop is not about that. This skill fixes the FORM of slop. It cannot make a hollow paragraph true.
 
-Free official standard (do not paste it in full; it is copyrighted): https://asd-ste100.org
+Free official standard (it is copyrighted, so do not paste it in full): https://asd-ste100.org
 
 (Adapted from https://github.com/woosal1337/blog/tree/main/videos/ep01-the-cure-for-ai-slop, MIT license — see `LICENSE.txt`.)

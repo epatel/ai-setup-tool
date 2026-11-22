@@ -1,8 +1,8 @@
 {
   "sources": {
     "agent-skills": {
-      "commit": "592807ab9537b092e92db46d5590868a5ac39903",
-      "label": "v2026.11.14",
+      "commit": "6799e3dc4d3e59dbb08eabab458ecc9c2278a406",
+      "label": "v2026.11.22",
       "ref": "latest-tag",
       "repo": "https://github.com/epatel/agent-skills.git"
     },
@@ -15,32 +15,32 @@
   },
   "tools": {
     "agent-skills:skill/double-check": {
-      "commit": "592807ab9537b092e92db46d5590868a5ac39903",
+      "commit": "6799e3dc4d3e59dbb08eabab458ecc9c2278a406",
       "dest": ".claude/skills/double-check",
-      "hash": "sha256:01914b5aad046b21aa8eb1945442152ea18f8f2c8b6b466b24e9b388b31a8a7b",
+      "hash": "sha256:cd7a54811598ace522f3c9dba5828cd04c5aed2ccb0eb1a4db9fbf0b4c4f254b",
       "path": "double-check",
-      "tree": "a8620e3ce5e2bfa5afa8894c417414f46dbc052a"
+      "tree": "d8db7df70f2b4920a8e6f3335137ed68784d6f03"
     },
     "agent-skills:skill/makefile-actions": {
-      "commit": "592807ab9537b092e92db46d5590868a5ac39903",
+      "commit": "6799e3dc4d3e59dbb08eabab458ecc9c2278a406",
       "dest": ".claude/skills/makefile-actions",
-      "hash": "sha256:4e9e2f126d6417e138d6af0bcf5ab52072883bfe85c8a8a476633a3477c6053a",
+      "hash": "sha256:af254b6a29eadac7f75339e4c79194b15096cfde369755e82405a9ca6196d884",
       "path": "makefile-actions",
-      "tree": "18481a151a2b35beb966108063df5d6bddc99e83"
+      "tree": "140194788df83889090e91d8051c7201bb30eefa"
     },
     "agent-skills:skill/review-agentic-setup": {
-      "commit": "592807ab9537b092e92db46d5590868a5ac39903",
+      "commit": "6799e3dc4d3e59dbb08eabab458ecc9c2278a406",
       "dest": ".claude/skills/review-agentic-setup",
-      "hash": "sha256:b8ec13d62100cba46797eab1791f950721c2744e9ae54cf157b28676730b5ab0",
+      "hash": "sha256:97cf4bf28c78c7bf498b2887b2b3a444e0fee69d43c1555b319325a964779fa3",
       "path": "review-agentic-setup",
-      "tree": "746208ac1801a599edab3304f9f596dc53bee545"
+      "tree": "2c9c2df21713be6d2bf482ee0c0d6bbea268a3c9"
     },
     "agent-skills:skill/ste-writing": {
-      "commit": "592807ab9537b092e92db46d5590868a5ac39903",
+      "commit": "6799e3dc4d3e59dbb08eabab458ecc9c2278a406",
       "dest": ".claude/skills/ste-writing",
-      "hash": "sha256:f20158ee22fd2b236a5bf9f54d57c19c6a921e68f1f476f5daf1cd08b096fef4",
+      "hash": "sha256:d5911294e0920509053da16a24d08d837befa62a85593358fdf0c55859cdeff0",
       "path": "ste-writing",
-      "tree": "84b8c3447f7f9237554120afc619bc2f3705cce9"
+      "tree": "9d0da8aa116850bc96b643eb9599f736aea0a587"
     },
     "project-setup:skill/project-setup": {
       "commit": "fdfe28fed8bd8a1fd478dd32bf4d2c407346eaba",

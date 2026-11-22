@@ -1,18 +1,18 @@
 ---
 name: double-check
-description: Double-check a change before it is committed, merged, or shipped, to raise confidence that it is right. Goes past a normal code review. It checks that the change does what was intended and that nothing is missing (call sites, tests, docs, config, migrations). It also looks for a simpler version and for safety risks (security, data loss, compatibility, failure modes), and backs every claim with evidence from running the code or tests. Use when the user asks to "double check", "sanity check", "take a second look", "make sure nothing is missing", "is this safe to merge", "am I missing anything", "how confident are we", or wants a deep review of a diff, branch, commit, or PR. Skip for a quick style pass or for code that is not a change.
+description: Double-check a change before it is committed, merged, or shipped, to raise confidence that it is right. Goes past a normal code review. It checks that the change does what was intended and that nothing is missing (call sites, tests, docs, config, migrations). It also looks for a simpler version and for safety risks (security, data loss, compatibility, failure modes). It backs every claim with evidence from running the code or tests. Use when the user asks to "double check", "sanity check", "take a second look", "make sure nothing is missing", "is this safe to merge", "am I missing anything", "how confident are we". Also use when the user wants a deep review of a diff, branch, commit, or PR. Skip for a quick style pass or for code that is not a change.
 ---
 
 # Double Check
 
-You know how to review code. This skill fixes the order of the passes, the rules of evidence, and the report. The goal is confidence, not a list of comments: at the end, the user knows what is verified, what is fixed, and what risk is left.
+You know how to review code. This skill fixes the order of the passes, the rules of evidence, and the report. The goal is confidence, not a list of comments. At the end, the user knows what you verified, what you fixed, and what risk is left.
 
 ## Method
 
 1. **Fix the scope.** Find the change: uncommitted diff, branch against its base, a commit, or a PR. Read the whole diff and every file it touches, not only the hunks.
 2. **State the intent.** In 1–3 sentences, say what the change must do. Take it from the task, commit message, PR description, or issue. If you cannot state it, ask the user before reviewing. A review without intent can only find style issues.
 3. **Run the five passes** below, in order. Use `references/checklist.md` for the questions of each pass.
-   1. **Completeness.** List what the intent requires, then map each item to the diff. Search for what the diff did not touch but should have: other callers of a changed signature, the old name after a rename, sibling implementations, tests, docs, config, migrations, generated files.
+   1. **Completeness.** List what the intent requires, then map each item to the diff. Search for what the diff did not touch but should have. Examples: other callers of a changed signature, the old name after a rename, sibling implementations, tests, docs, config, migrations, generated files.
    2. **Correctness.** Trace each changed path from its callers. Try edge inputs, error paths, and the behavior that existing callers relied on before the change.
    3. **Safety.** Check untrusted input, secrets, permissions, destructive or irreversible operations, persisted data and wire formats, concurrency, and what happens when a dependency fails. Ask how to roll it back.
    4. **Simplicity.** Look for a smaller change with the same effect: an existing helper, a removed branch, less speculative generality, fewer new concepts. Remove leftovers such as debug output, dead code, and commented-out code.
@@ -42,7 +42,7 @@ flowchart LR
 
 1. **Verdict.** One of: *ready*, *ready after fixes*, *not ready*. Add one sentence of reason.
 2. **Intent.** The 1–3 sentences from step 2.
-3. **Findings.** A table, most severe first: severity (blocker / should fix / nit), pass, `file:line`, the problem, the evidence, confirmed or suspected, and the proposed fix.
+3. **Findings.** A table, most severe first. Columns: severity (blocker / should fix / nit), pass, `file:line`, the problem, the evidence, confirmed or suspected, and the proposed fix.
 4. **Missing.** A checklist of the work that the change still needs.
 5. **Simplifications.** Each with the before and after, in a few lines.
 6. **Verification.** Each command that you ran, with its result. Each behavior that you exercised, with how.
@@ -51,4 +51,4 @@ flowchart LR
 
 ## Quick mode
 
-For a small diff (one file, under about 30 lines): do passes 1, 2, and 5 only, and report the verdict, the findings, and the verification.
+For a small diff (one file, under about 30 lines), do passes 1, 2, and 5 only. Report the verdict, the findings, and the verification.

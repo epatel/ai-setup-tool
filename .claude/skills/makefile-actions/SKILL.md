@@ -1,6 +1,6 @@
 ---
 name: makefile-actions
-description: Create or extend a project Makefile that acts as a single consolidated action script — a numbered menu plus short targets for the project's real commands (start, test, build, deploy, setup). Use when the user wants a Makefile, a "make deploy"/"make start" entry point, a task runner, or one place to discover and run a project's common actions.
+description: Create or extend a project Makefile that acts as a single consolidated action script. It holds a numbered menu plus short targets for the project's real commands (start, test, build, deploy, setup). Use when the user wants a Makefile, a "make deploy"/"make start" entry point, a task runner, or one place to discover and run a project's common actions.
 ---
 
 # Makefile Actions
@@ -14,7 +14,7 @@ Generate a Makefile that consolidates a project's real commands behind short, di
 
 ## How to build it
 
-1. Discover the real commands first — look at `package.json` scripts, `*.sh` files, CI config, README. Don't invent targets; wrap what already exists.
+1. Discover the real commands first — look at `package.json` scripts, `*.sh` files, CI config, README. Do not invent targets. Wrap what already exists.
 2. Write targets that call those commands. Pass-through args via `make target VAR=value` and `$(VAR)`.
 3. Keep the structure below.
 
@@ -70,6 +70,6 @@ update_phony:
 - `.SILENT:` so `echo` lines print clean (no command echo).
 - `make` with no target runs `info`: prints the numbered menu, then prompts for a number and runs it.
 - Numbered `menu` lines so `select` can map a number → command via `grep "^N "`.
-- `select` calls `"$(MAKE)" --no-print-directory menu`, not bare `make`, so the same make binary and flags are used and no "Entering directory" lines leak into the pipe. Keep the quotes: on macOS `$(MAKE)` can expand to an Xcode path containing a space.
-- Keep `.PHONY` listing every target; run `make update_phony` after adding targets.
+- `select` calls `"$(MAKE)" --no-print-directory menu`, not bare `make`, so the sub-make uses the same make binary and flags, and no "Entering directory" lines leak into the pipe. Keep the quotes: on macOS `$(MAKE)` can expand to an Xcode path containing a space.
+- Keep `.PHONY` listing every target. Run `make update_phony` after adding targets.
 - Pass-through args: `make start_at TARGET=path` → recipe uses `$(TARGET)`.

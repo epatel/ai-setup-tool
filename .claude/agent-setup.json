@@ -8,7 +8,8 @@
     "standing-defaults",
     "skill:double-check",
     "skill:makefile-actions",
-    "skill:review-agentic-setup"
+    "skill:review-agentic-setup",
+    "skill:ste-writing"
   ],
   "declined": [],
   "copied": {
@@ -17,6 +18,6 @@
       "sha256": "8539dbdf33ba63de33d1af1f02f6bbfd53d92178ccfbf26b1a88a20e886f7b8a"
     }
   },
-  "skills_release": "v2026.11.14",
+  "skills_release": "v2026.11.22",
   "tools": {}
 }
