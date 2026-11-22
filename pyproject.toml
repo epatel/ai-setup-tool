@@ -4,6 +4,8 @@ version = "0.1.0"
 description = "ast - manage a project's agentic setup (skills, agents, commands, scripts) from referenced repos and org-wide sets"
 readme = "README.md"
 requires-python = ">=3.11.4"
+license = "MIT"
+license-files = ["LICENSE"]
 dependencies = ["tomlkit>=0.12"]
 
 [project.scripts]

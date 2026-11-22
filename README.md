@@ -1,3 +1,10 @@
+[![CI](https://github.com/epatel/ai-setup-tool/actions/workflows/ci.yml/badge.svg)](https://github.com/epatel/ai-setup-tool/actions/workflows/ci.yml)
+[![Audit](https://github.com/epatel/ai-setup-tool/actions/workflows/audit.yml/badge.svg)](https://github.com/epatel/ai-setup-tool/actions/workflows/audit.yml)
+[![Release](https://img.shields.io/github/v/release/epatel/ai-setup-tool)](https://github.com/epatel/ai-setup-tool/releases/latest)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/epatel/ai-setup-tool/badge)](https://scorecard.dev/viewer/?uri=github.com/epatel/ai-setup-tool)
+
+<a href="https://claude.ai"><img src="made-with-claude.png" height="32" alt="Made with Claude"></a>
+
 # ast - AI setup tool
 
 `ast` keeps a project's agentic tools (skills, agents, commands, scripts, cards) in step with the
@@ -141,3 +148,7 @@ make test
 make lint
 make link    # put this checkout's ast on your PATH: ~/.local/bin/ast -> .venv/bin/ast
 ```
+
+## License
+
+MIT. See [LICENSE](LICENSE).
