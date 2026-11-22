@@ -94,6 +94,7 @@ exclude = ["agent-skills:skill/double-check"]
 | `ast sync` | Make installed files match `ast.toml` and `ast.lock`. |
 | `ast update [source]...` | Re-resolve refs (all sources and the org repo, or just the named ones) and reinstall. |
 | `ast set new <name> [--extends A,B]` / `rm <name>` / `list` | Manage sets in an org repo. |
+| `ast help [command]` | Show help for `ast`, or for one command. |
 
 Name a tool as `name`, `kind/name`, `source:name` or `source:kind/name`; the short forms work
 while they are unambiguous. Global flags: `-C DIR`, `--offline`, `--org` (act on
@@ -132,4 +133,5 @@ By hand: install git 2.28+ and [uv](https://docs.astral.sh/uv/) 0.4.27+, then:
 make setup   # uv sync into .venv/ (uv fetches Python 3.11.4+ if needed)
 make test
 make lint
+make link    # put this checkout's ast on your PATH: ~/.local/bin/ast -> .venv/bin/ast
 ```

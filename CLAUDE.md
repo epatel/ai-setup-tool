@@ -17,6 +17,7 @@ This repo manages its own skills with `ast`: see `ast.toml`, `ast.lock` and `.cl
 - Test: `make test` (one test: `uv run pytest tests/test_org.py -k selects`)
 - Lint: `make lint` — format: `make format`
 - Run the tool from the working tree: `uv run ast <command>`
+- Use it from anywhere: `make link` (symlinks `~/.local/bin/ast` to `.venv/bin/ast`)
 
 Project setup lives in setup-todo-list.md. Don't run setup doctor unless asked; suggest it if a failure looks like missing tooling.
 

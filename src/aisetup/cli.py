@@ -566,6 +566,16 @@ def build_parser() -> argparse.ArgumentParser:
     a.add_argument("--description")
     a = actions.add_parser("rm", help="delete a set")
     a.add_argument("name")
+
+    def cmd_help(args) -> int:
+        target = sub.choices.get(args.topic) if args.topic else parser
+        if target is None:
+            raise AstError(f"unknown command '{args.topic}'; commands: {', '.join(sub.choices)}")
+        target.print_help()
+        return 0
+
+    p = command("help", cmd_help, "show help for ast, or for one command")
+    p.add_argument("topic", nargs="?", metavar="command")
     return parser
 
 

@@ -74,3 +74,12 @@ def test_config_from_newer_ast_is_refused(tmp_path):
     (tmp_path / "ast.toml").write_text("version = 99\n")
     with pytest.raises(AstError, match="upgrade ast"):
         ProjectConfig.load(tmp_path)
+
+
+def test_help_command(ast, tmp_path):
+    code, out, _ = ast(tmp_path, "help")
+    assert code == 0 and "usage: ast" in out and "select" in out
+    code, out, _ = ast(tmp_path, "help", "update")
+    assert code == 0 and "usage: ast update" in out
+    code, _, err = ast(tmp_path, "help", "nope")
+    assert code == 2 and "unknown command 'nope'" in err
