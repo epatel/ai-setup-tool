@@ -1,0 +1,7 @@
+initial-idea.md
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+dist/
+setup-todo-list.local.md

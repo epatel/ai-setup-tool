@@ -1,0 +1,47 @@
+{
+  "sources": {
+    "agent-skills": {
+      "commit": "592807ab9537b092e92db46d5590868a5ac39903",
+      "label": "v2026.11.14",
+      "ref": "latest-tag",
+      "repo": "https://github.com/epatel/agent-skills.git"
+    },
+    "project-setup": {
+      "commit": "fdfe28fed8bd8a1fd478dd32bf4d2c407346eaba",
+      "label": "v1.1.1",
+      "ref": "v1.1.1",
+      "repo": "epatel/project-setup"
+    }
+  },
+  "tools": {
+    "agent-skills:skill/double-check": {
+      "commit": "592807ab9537b092e92db46d5590868a5ac39903",
+      "dest": ".claude/skills/double-check",
+      "hash": "sha256:01914b5aad046b21aa8eb1945442152ea18f8f2c8b6b466b24e9b388b31a8a7b",
+      "path": "double-check",
+      "tree": "a8620e3ce5e2bfa5afa8894c417414f46dbc052a"
+    },
+    "agent-skills:skill/makefile-actions": {
+      "commit": "592807ab9537b092e92db46d5590868a5ac39903",
+      "dest": ".claude/skills/makefile-actions",
+      "hash": "sha256:4e9e2f126d6417e138d6af0bcf5ab52072883bfe85c8a8a476633a3477c6053a",
+      "path": "makefile-actions",
+      "tree": "18481a151a2b35beb966108063df5d6bddc99e83"
+    },
+    "agent-skills:skill/review-agentic-setup": {
+      "commit": "592807ab9537b092e92db46d5590868a5ac39903",
+      "dest": ".claude/skills/review-agentic-setup",
+      "hash": "sha256:b8ec13d62100cba46797eab1791f950721c2744e9ae54cf157b28676730b5ab0",
+      "path": "review-agentic-setup",
+      "tree": "746208ac1801a599edab3304f9f596dc53bee545"
+    },
+    "project-setup:skill/project-setup": {
+      "commit": "fdfe28fed8bd8a1fd478dd32bf4d2c407346eaba",
+      "dest": ".claude/skills/project-setup",
+      "hash": "sha256:33d33ea352ae47f086484e6e7a2cae6623e842a79fede2bb58f53e69fc54d1b4",
+      "path": "skills/project-setup",
+      "tree": "e3676298eab7f6b0f9b8e7c5ba5eeb7a2906a826"
+    }
+  },
+  "version": 1
+}

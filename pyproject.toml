@@ -1,0 +1,26 @@
+[project]
+name = "ai-setup-tool"
+version = "0.1.0"
+description = "ast - manage a project's agentic setup (skills, agents, commands, scripts) from referenced repos and org-wide sets"
+readme = "README.md"
+requires-python = ">=3.11.4"
+dependencies = ["tomlkit>=0.12"]
+
+[project.scripts]
+ast = "aisetup.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aisetup"]
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120

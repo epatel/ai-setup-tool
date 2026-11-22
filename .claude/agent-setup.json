@@ -1,0 +1,22 @@
+{
+  "source": "https://ai.memention.net/setup",
+  "version": "2026-11-14.4",
+  "updated": "2026-11-22",
+  "applied": [
+    "context-cards",
+    "project-plan",
+    "standing-defaults",
+    "skill:double-check",
+    "skill:makefile-actions",
+    "skill:review-agentic-setup"
+  ],
+  "declined": [],
+  "copied": {
+    "cards/standing-defaults.md": {
+      "pattern": "standing-defaults",
+      "sha256": "8539dbdf33ba63de33d1af1f02f6bbfd53d92178ccfbf26b1a88a20e886f7b8a"
+    }
+  },
+  "skills_release": "v2026.11.14",
+  "tools": {}
+}

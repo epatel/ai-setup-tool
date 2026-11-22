@@ -1,0 +1,18 @@
+# ast (AI setup tool) config. Commit this file and ast.lock with the project.
+version = 1
+
+[sources.agent-skills]
+repo = "https://github.com/epatel/agent-skills.git"
+ref = "latest-tag"
+
+[sources.project-setup]
+repo = "epatel/project-setup"
+ref = "v1.1.1"
+
+[tools]
+add = [
+    "agent-skills:skill/double-check",
+    "agent-skills:skill/makefile-actions",
+    "agent-skills:skill/review-agentic-setup",
+    "project-setup:skill/project-setup",
+]
