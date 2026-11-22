@@ -13,7 +13,7 @@ extend it), and each project selects a set. The same `ast` commands manage that 
 Needs Python 3.11.4+ and git.
 
 ```sh
-uv tool install git+<this repo>     # or: pipx install git+<this repo>
+uv tool install git+https://github.com/epatel/ai-setup-tool     # or: pipx install git+https://github.com/epatel/ai-setup-tool
 ```
 
 ## A project on its own
@@ -34,12 +34,14 @@ no ref means the default branch.
 
 ## With an org repo
 
+[epatel/ast-repo](https://github.com/epatel/ast-repo) is a demo org repo you can try this with.
+
 ```sh
-ast use my-org/ai-setup          # import the org's sources and sets
+ast use epatel/ast-repo          # import the org's sources and sets
 ast select                       # list the sets
 ast select proj-fenix            # install that set
-ast disable some-skill           # turn one of the set's tools off for this project
-ast add other-skill              # add a tool the set does not have
+ast disable design-system        # turn one of the set's tools off for this project
+ast add ste-writing              # add a tool the set does not have
 ```
 
 ## Managing an org repo
