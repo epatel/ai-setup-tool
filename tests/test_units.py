@@ -13,16 +13,17 @@ def test_discover_finds_each_kind_and_ignores_the_rest():
         ".claude/skills/alpha/SKILL.md",  # a second copy: the root one wins
         "deep/er/gamma/SKILL.md",  # not in a known place
         "agents/reviewer.md", "commands/ship.md", "commands/sub/nested.md",
-        "scripts/check.sh", "README.md",
+        "scripts/check.sh", "README.md", "cards/defaults.md", "cards/notes.txt",
     ]  # fmt: skip
     tools = {t.id: t for t in discover("src", files)}
     assert set(tools) == {
-        "src:skill/alpha", "src:skill/beta", "src:agent/reviewer", "src:command/ship", "src:script/check.sh",
+        "src:skill/alpha", "src:skill/beta", "src:agent/reviewer", "src:command/ship", "src:script/check.sh", "src:card/defaults",
     }  # fmt: skip
     assert tools["src:skill/alpha"].path == "alpha"
     assert tools["src:skill/beta"].dest == ".claude/skills/beta"
     assert tools["src:agent/reviewer"].dest == ".claude/agents/reviewer.md"
     assert tools["src:script/check.sh"].dest == ".claude/scripts/check.sh"
+    assert tools["src:card/defaults"].dest == "cards/defaults.md"
 
 
 def test_match_accepts_short_and_full_names():

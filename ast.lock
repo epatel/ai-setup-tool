@@ -9,7 +9,7 @@
     "project-setup": {
       "commit": "fdfe28fed8bd8a1fd478dd32bf4d2c407346eaba",
       "label": "v1.1.1",
-      "ref": "v1.1.1",
+      "ref": "latest-tag",
       "repo": "epatel/project-setup"
     }
   },
@@ -34,6 +34,13 @@
       "hash": "sha256:b8ec13d62100cba46797eab1791f950721c2744e9ae54cf157b28676730b5ab0",
       "path": "review-agentic-setup",
       "tree": "746208ac1801a599edab3304f9f596dc53bee545"
+    },
+    "agent-skills:skill/ste-writing": {
+      "commit": "592807ab9537b092e92db46d5590868a5ac39903",
+      "dest": ".claude/skills/ste-writing",
+      "hash": "sha256:f20158ee22fd2b236a5bf9f54d57c19c6a921e68f1f476f5daf1cd08b096fef4",
+      "path": "ste-writing",
+      "tree": "84b8c3447f7f9237554120afc619bc2f3705cce9"
     },
     "project-setup:skill/project-setup": {
       "commit": "fdfe28fed8bd8a1fd478dd32bf4d2c407346eaba",

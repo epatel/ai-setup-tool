@@ -13,6 +13,10 @@ installed (`catalog.DESTS`):
 | agent | `agents/<name>.md`, `.claude/agents/<name>.md` | `.claude/agents/<name>.md` |
 | command | `commands/<name>.md`, `.claude/commands/<name>.md` | `.claude/commands/<name>.md` |
 | script | `scripts/<file>` | `.claude/scripts/<file>` |
+| card | `cards/<name>.md` | `cards/<name>.md` |
+
+Cards are the one kind installed outside `.claude/`. `ast` copies the card but does not
+add its index line to `CLAUDE.md`.
 
 When the same kind and name appears in two places, the earlier place in the table wins.
 That matters for repos such as `epatel/agent-skills`, which keeps a skill at the root and

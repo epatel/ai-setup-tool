@@ -13,6 +13,7 @@ DESTS = {
     "agent": ".claude/agents/{name}.md",
     "command": ".claude/commands/{name}.md",
     "script": ".claude/scripts/{name}",
+    "card": "cards/{name}.md",
 }
 
 # Places a source repo may keep tools, in order of precedence when a name appears twice.
@@ -21,6 +22,7 @@ _FILE_ROOTS = {
     "agent": ("agents/", ".claude/agents/"),
     "command": ("commands/", ".claude/commands/"),
     "script": ("scripts/",),
+    "card": ("cards/",),
 }
 
 

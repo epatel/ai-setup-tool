@@ -102,6 +102,8 @@ class _Config:
     def _child(self, key: str, name: str | None = None):
         """Get or create the table `[key]`, or `[key.name]` when a name is given."""
         if key not in self.doc:
+            if not tomlkit.dumps(self.doc).endswith("\n\n"):
+                self.doc.add(tomlkit.nl())  # keep a blank line before a new section
             self.doc[key] = tomlkit.table(is_super_table=name is not None)
         if name is None:
             return self.doc[key]
@@ -188,7 +190,7 @@ class OrgConfig(_Config):
         if description:
             table["description"] = description
         if extends:
-            table["extends"] = _array(extends)
+            table["extends"] = extends  # short: stays on one line
         table["tools"] = _array([])
 
     def remove_set(self, name: str) -> None:

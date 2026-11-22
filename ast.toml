@@ -7,7 +7,7 @@ ref = "latest-tag"
 
 [sources.project-setup]
 repo = "epatel/project-setup"
-ref = "v1.1.1"
+ref = "latest-tag"
 
 [tools]
 add = [
@@ -15,4 +15,5 @@ add = [
     "agent-skills:skill/makefile-actions",
     "agent-skills:skill/review-agentic-setup",
     "project-setup:skill/project-setup",
+    "agent-skills:skill/ste-writing",
 ]

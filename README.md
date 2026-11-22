@@ -1,6 +1,6 @@
 # ast - AI setup tool
 
-`ast` keeps a project's agentic tools (skills, agents, commands, scripts) in step with the
+`ast` keeps a project's agentic tools (skills, agents, commands, scripts, cards) in step with the
 repos they come from. The project commits a small config (`ast.toml`), a lock file
 (`ast.lock`) and the installed files, so every clone and worktree has the same setup, and
 `ast status` / `ast update` show and apply what changed upstream.
@@ -110,6 +110,10 @@ while they are unambiguous. Global flags: `-C DIR`, `--offline`, `--org` (act on
 | agent | `agents/<name>.md`, `.claude/agents/<name>.md` | `.claude/agents/<name>.md` |
 | command | `commands/<name>.md`, `.claude/commands/<name>.md` | `.claude/commands/<name>.md` |
 | script | `scripts/<file>` | `.claude/scripts/<file>` |
+| card | `cards/<name>.md` | `cards/<name>.md` |
+
+A card is a context card: a short reference file that `CLAUDE.md` links to. `ast` copies the
+file; you add the index line to `CLAUDE.md` yourself.
 
 ## Safety rules
 
