@@ -12,6 +12,7 @@ flowchart LR
     engine --> gitrepo[gitrepo.py<br>cached bare clones]
     cli --> gitrepo
     engine --> cardindex[cardindex.py<br>CARDS.md block, CLAUDE.md import]
+    cli --> prompts[prompts.py<br>built-in agent prompts]
 ```
 
 Dependencies point one way: `cli` → `engine` → `config` / `catalog` / `gitrepo`. The leaf
@@ -48,6 +49,15 @@ rewrites the lock in memory.
 Org-mode commands edit `ast-org.toml` directly through `OrgConfig`. There is no lock and
 nothing is installed. `cli.org_catalog` lists the tools of the org's sources; for the source
 `.` it walks the working tree, so a new skill can be added to a set before it is committed.
+
+## Prompts
+
+`ast prompt <name>` prints text for a coding agent. `prompts.py` holds the built-in ones
+(`setup`, `adopt`, `update`, `org`) as templates with no logic beyond inserting their arguments. Any source,
+including the org repo, can offer more as `prompts/<name>.md`; `cli.source_prompts` reads
+them from the locked commit (or from the working tree in an org repo). They are never
+installed. A built-in name wins over a source prompt of the same name. The command works
+outside a project, where only the built-ins exist.
 
 ## Git access
 

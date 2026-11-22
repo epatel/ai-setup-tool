@@ -21,6 +21,7 @@ from .config import (
 from .engine import LOCK_FILE, Lock, apply, build_plan, installed_state, pending
 from .errors import AstError
 from .gitrepo import Repo, default_name, is_local, normalize_repo
+from .prompts import BUILTIN, PROMPT_DIR, fill, title
 
 # ---------------------------------------------------------------- shared helpers
 
@@ -521,6 +522,42 @@ def cmd_set(args) -> int:
     return 0
 
 
+def source_prompts(args) -> dict:
+    """Prompts that the org repo and the sources offer: name -> (origin, function that reads it)."""
+    try:
+        mode, root = find_root(args)
+    except AstError:
+        return {}  # not in a project: only the built-in prompts
+    found: dict = {}
+    if mode == "org":
+        for path in sorted((root / PROMPT_DIR).glob("*.md")):
+            found[path.stem] = ("this repo", path.read_text)
+        return found
+    plan = build_plan(ProjectConfig.load(root), Lock(root / LOCK_FILE), offline=args.offline, strict=False)
+    for src in plan.sources.values():
+        for file in src.repo.files(src.commit):
+            name = file[len(PROMPT_DIR) : -3]
+            if file.startswith(PROMPT_DIR) and file.endswith(".md") and name and "/" not in name:
+                found.setdefault(name, (src.name, lambda s=src, f=file: s.repo.read(s.commit, f)))
+    return found
+
+
+def cmd_prompt(args) -> int:
+    extra = {n: p for n, p in source_prompts(args).items() if n not in BUILTIN}
+    if not args.name:
+        print("Prompts for a coding agent. Print one with `ast prompt <name>` and tell the agent to follow it.")
+        rows = [[name, "built in", description] for name, (description, _) in BUILTIN.items()]
+        rows += [[name, f"from {origin}", title(read(), name)] for name, (origin, read) in extra.items()]
+        table(rows)
+    elif args.name in BUILTIN:
+        print(BUILTIN[args.name][1](args.args), end="")
+    elif args.name in extra:
+        print(fill(extra[args.name][1](), args.args).rstrip("\n"))
+    else:
+        raise AstError(f"unknown prompt '{args.name}'; prompts: {', '.join([*BUILTIN, *extra])}")
+    return 0
+
+
 # ---------------------------------------------------------------- parser
 
 
@@ -540,8 +577,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--offline", action="store_true", help="do not fetch from remotes")
     sub = parser.add_subparsers(dest="command", required=True, metavar="command")
 
-    def command(name: str, func, help: str, *, tools=False, set_=False, force=False):
-        p = sub.add_parser(name, help=help, description=help)
+    def command(name: str, func, help: str, *, tools=False, set_=False, force=False, aliases=()):
+        p = sub.add_parser(name, help=help, description=help, aliases=list(aliases))
         p.set_defaults(func=func)
         # the global flags are also accepted after the command name
         p.add_argument("--org", action="store_true", default=argparse.SUPPRESS, help=argparse.SUPPRESS)
@@ -604,6 +641,10 @@ def build_parser() -> argparse.ArgumentParser:
             raise AstError(f"unknown command '{args.topic}'; commands: {', '.join(sub.choices)}")
         target.print_help()
         return 0
+
+    p = command("prompt", cmd_prompt, "print a prompt for a coding agent to follow (no name: list them)", aliases=["ai"])
+    p.add_argument("name", nargs="?", help="setup, adopt, update, org, or a prompt from the org repo or a source")
+    p.add_argument("args", nargs="*", metavar="arg", help="e.g. the org repo for `setup`")
 
     p = command("help", cmd_help, "show help for ast, or for one command")
     p.add_argument("topic", nargs="?", metavar="command")

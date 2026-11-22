@@ -69,6 +69,7 @@ def source(tmp_path) -> Path:
             "cards/naming.md": "# Naming\n\nHow we name things.\n",
             "CARDS.md": "# Cards\n\n- [defaults](cards/defaults.md) — choosing a default for a new service\n",
             "README.md": "not a tool\n",
+            "prompts/tidy.md": "# Tidy the repo\n\nTidy $ARGUMENTS now.\n",
         },
     )
     return repo

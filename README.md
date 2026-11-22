@@ -88,6 +88,26 @@ tools = ["agent-skills:skill/state-machines"]
 exclude = ["agent-skills:skill/double-check"]
 ```
 
+## Let an agent do it
+
+`ast` does the mechanical part. `ast prompt` prints instructions for the part that needs
+judgment, for a coding agent to follow:
+
+```sh
+ast prompt setup epatel/ast-repo   # pick the set that fits this project, install, report
+ast prompt adopt                   # bring skills that were copied in by hand under ast
+ast prompt update                  # update, then review what changed in the installed instructions
+ast prompt org ../app ../docs      # start an org repo with sets that fit those projects
+ast prompt                         # list the prompts, including the ones your org repo offers
+```
+
+In Claude Code, run `! ast prompt setup epatel/ast-repo` and then say "follow that". With
+another agent, paste the output. `ast ai` is the same command.
+
+An org repo or a source can add its own prompts: a file `prompts/<name>.md` is printed by
+`ast prompt <name>`, with `$ARGUMENTS` replaced by the extra words on the command line.
+Prompts are read from the source at its locked commit; they are not installed as files.
+
 ## Commands
 
 | Command | Does |
@@ -105,6 +125,7 @@ exclude = ["agent-skills:skill/double-check"]
 | `ast sync` | Make installed files match `ast.toml` and `ast.lock`. |
 | `ast update [source]...` | Re-resolve refs (all sources and the org repo, or just the named ones) and reinstall. |
 | `ast set new <name> [--extends A,B]` / `rm <name>` / `list` | Manage sets in an org repo. |
+| `ast prompt [name] [arg]...` (alias `ast ai`) | Print a prompt for a coding agent to follow: `setup`, `adopt`, `update`, `org`, or one from the org repo. No name: list them. |
 | `ast help [command]` | Show help for `ast`, or for one command. |
 
 Name a tool as `name`, `kind/name`, `source:name` or `source:kind/name`; the short forms work
@@ -155,9 +176,9 @@ With any other agent: *"Set up this project using setup-todo-list.md"*.
 By hand: install git 2.28+ and [uv](https://docs.astral.sh/uv/) 0.4.27+, then:
 
 ```sh
-make setup   # uv sync into .venv/ (uv fetches Python 3.11.4+ if needed)
-make test
-make lint
+make          # numbered menu of every action; type a number to run it
+make setup    # uv sync into .venv/ (uv fetches Python 3.11.4+ if needed)
+make check    # lint + tests; run before committing
 make link    # put this checkout's ast on your PATH: ~/.local/bin/ast -> .venv/bin/ast
 ```
 

@@ -15,7 +15,8 @@ This repo manages its own skills with `ast`: see `ast.toml`, `ast.lock` and `.cl
 
 - Setup: `make setup` (uv sync into `.venv/`)
 - Test: `make test` (one test: `uv run pytest tests/test_org.py -k selects`)
-- Lint: `make lint` — format: `make format`
+- Lint: `make lint` — format: `make format` — both lint and tests: `make check`
+- All actions: `make menu` (plain `make` also prompts for a number, so do not run it unattended)
 - Run the tool from the working tree: `uv run ast <command>`
 - Use it from anywhere: `make link` (symlinks `~/.local/bin/ast` to `.venv/bin/ast`)
 
